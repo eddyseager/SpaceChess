@@ -47,6 +47,11 @@
                 drawPlanets(context);
                 drawText(context);
                 drawShips(context);
+                
+                canvas.addEventListener('click', function(evt){
+                		var mousePos = getMousePos(canvas, evt);
+                		alert(mousePos.x + " " + mousePos.y);
+                }, false);
             };
             
             
@@ -131,6 +136,26 @@
             	}
             	
             	return false;
+            }
+            
+            function getMousePos(canvas, evt){
+            	// get canvas position
+            	var obj = canvas;
+            	var top = 0;
+            	var left = 0;
+            	while (obj.tagName != 'BODY') {
+            		top += obj.offsetTop;
+            		left += obj.offsetLeft;
+            		obj = obj.offsetParent;
+            	}
+ 
+            	// return relative mouse position
+            	var mouseX = evt.clientX - left + window.pageXOffset;
+            	var mouseY = evt.clientY - top + window.pageYOffset;
+            	return {
+            		x: Math.floor(mouseX / OFFSET) + 1,
+            		y: Math.floor(mouseY / OFFSET) + 1
+            	};
             }
             
             function Planet(x, y, player) {
