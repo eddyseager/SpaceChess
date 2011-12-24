@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script>
+        		//game properties
+        		var WIDTH = 500;
+        		var HEIGHT = 500;
+        		var OFFSET = 50;
+        		
+        		//create our planets
+        		var planets = new Array();
+        		planets[0] = new Planet(3, 3, 1);
+        		planets[1] = new Planet(8, 8, 2);
+        	  planets[2] = new Planet(3, 5, 0);
+        		planets[3] = new Planet(8, 6, 0);
+        	  
+        		//create 2 players and a neutral player (for ownership of neutral
+        		//planets
+        		
+        		
+        		var players = new Array();
+        		players[0] = new Player(0, "neutral", 0, "grey");
+        		players[1] = new Player(1, "player 1", 10, "red");
+        		players[2] = new Player(2, "player 2", 10, "yellow");
+        		var playerTurn = 1;
+        		var turnNumber = 1;
+        		
+        		//create the ship types
+        		var ShipClasses = new Object();
+        		ShipClasses.dreadnaught = new ShipType(10, 1, 6, "D");
+        		ShipClasses.corvette = new ShipType(10, 3, 3, "C");
+        		ShipClasses.hive = new ShipType(10, 1, 3, "H");
+        		ShipClasses.fighter = new ShipType(5, 2, 1, "f");
+        		ShipClasses.bomber = new ShipType(8, 1, 3, "b");
+        		
+        		//create a couple of ships
+        		var ships = new Array();
+        		ships[0] = new Ship("dreadnaught", 1, 4, 3);
+        		ships[1] = new Ship("corvette", 2, 8, 8);
+        		ships[2] = new Ship("hive", 2, 1, 1);
+        		ships[3] = new Ship("fighter", 1, 10, 10);
+	
+        
+            window.onload = function(){
+                var canvas = document.getElementById("myCanvas");
+                var context = canvas.getContext("2d");
+ 
+                drawGrid(context);
+                drawPlanets(context);
+                drawText(context);
+                drawShips(context);
+            };
+            
+            
+            function drawGrid(context) {
+            	context.moveTo(0, 0);
+            	
+            	//draw rectangles
+            	for (var x = 0; x < WIDTH; x += OFFSET) {
+            		for (var y = 0; y < HEIGHT; y+= OFFSET) {
+            	    context.rect(x, y, OFFSET, OFFSET);
+            	    context.fillStyle = "black";
+            	    context.fill();
+            	    context.lineWidth = 1;
+            	    context.strokeStyle = "grey";
+            	    context.stroke();
+            	  }
+            	}
+            }
+            
+            function drawPlanets(context) {
+            	for (var i = 0; i < planets.length; i++) {
+            		context.beginPath();
+            		context.arc((planets[i].x * OFFSET) - OFFSET/2, 
+            			(planets[i].y * OFFSET) - OFFSET/2, 
+            			20, 0, 2 * Math.PI, false);
+            		context.fillStyle = players[planets[i].player].colour;
+            		context.fill();
+            		context.lineWidth = 1;
+            		context.strokeStyle = "black";
+            		context.stroke();            		
+            	}
+            }
+            
+            function drawText(context) {            	
+            	//draw who's turn it is
+            	context.font = "20px Arial";
+            	context.fillStyle = players[playerTurn].colour;
+            	context.fillText("Player " + playerTurn + "'s Turn", 600, 20);
+            	
+            	//draw the resources
+            	context.font = "40px Arial";
+            	context.fillStyle = players[1].colour;
+            	context.fillText(players[1].resources, 600, 80);
+            	context.fillStyle = players[2].colour;
+            	context.fillText(players[2].resources, 670, 80);
+            	
+            }
+            
+            function drawShips(context) {
+            	for (var i = 0; i < ships.length; i++) {
+            		context.font = "32px Arial bold";
+            		context.fillStyle = players[ships[i].player].colour;
+            		
+            		// use different colour for ships on planet
+            		if (isPlanet(ships[i].x, ships[i].y)) {
+            			context.fillStyle = "black";
+            		}
+            		context.fillText(ShipClasses[ships[i].type].symbol, 
+            				(ships[i].x - 1) * OFFSET + (OFFSET / 4),
+            				(ships[i].y - 1) * OFFSET + (OFFSET / 4 * 3));
+            	}
+            }
+            
+            function isPlanet(x, y) {
+            	for (var i = 0; i < planets.length; i++) {
+            		if (planets[i].x == x && planets[i].y == y) {
+            			return true;
+            		}
+            	}
+            	
+            	return false;
+            }
+            
+            function Planet(x, y, player) {
+            	this.x = x;
+            	this.y = y;
+            	this.player = player;
+            }
+            
+            function Player(id, name, resources, colour) {
+            	this.id = id;
+            	this.name = name;
+            	this.resources = resources;
+            	this.colour = colour;
+            }
+            
+            function ShipType(cost, movement, strength, symbol) {
+            	this.cost = cost;
+            	this.movement = movement;
+            	this.strength = strength;
+            	this.symbol = symbol;
+            }
+            
+            function Ship(type, player, x, y) {
+            	this.type = type;
+            	this.player = player;
+            	this.x = x;
+            	this.y = y;
+            }
+ 
+        </script>
+    </head>
+    <body style="background-color:black;">
+        <canvas id="myCanvas" width="800" height="500">
+        </canvas>
+    </body>
+</html>
