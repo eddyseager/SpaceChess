@@ -22,6 +22,8 @@
         		players[2] = new Player(2, "player 2", 10, "yellow");
         		var playerTurn = 1;
         		var turnNumber = 1;
+        		var isShipSelected = false;
+        		var selectedLocation = {x: -1, y: -1};
         		
         		//create the ship types
         		var ShipClasses = new Object();
@@ -41,28 +43,69 @@
         
             window.onload = function(){
                 var canvas = document.getElementById("myCanvas");
-                var context = canvas.getContext("2d");
- 
-                drawGrid(context);
-                drawPlanets(context);
-                drawText(context);
-                drawShips(context);
+                redraw();
                 
                 canvas.addEventListener('click', function(evt){
                 		var mousePos = getMousePos(canvas, evt);
-                		alert(mousePos.x + " " + mousePos.y);
+                		if (mousePos.x <= 10 && mousePos.y <= 10) {
+                			processClick(mousePos);
+                		}
                 }, false);
             };
             
+            function redraw() {
+            	var canvas = document.getElementById("myCanvas");
+               var context = canvas.getContext("2d");
+              context.clearRect(0, 0, 800, 600);
+ 
+               drawGrid(context);
+               drawPlanets(context);
+               drawText(context);
+               drawShips(context);
+            }
             
+            function processClick(coord) {
+            	//select a ship to move
+            	if (!isShipSelected && isPlayerShip(coord)) {
+            			selectedLocation = coord;
+            			isShipSelected = true;
+            			redraw();
+            	} else if (isShipSelected && isPlayerShip(coord) && 
+            		selectedLocation.x == coord.x && 
+            		selectedLocation.y == coord.y) {
+            		//unselec selected ship
+            		selectedLocation = {x: -1, y:-1};
+            		isShipSelected = false;
+            		redraw();
+            	}
+            }
+            
+            function isPlayerShip(coord) {
+            	for (var i = 0; i < ships.length; i++) {
+            		if (ships[i].player == playerTurn && ships[i].x == coord.x &&
+            			ships[i].y == coord.y) {
+            				return true;
+            		}
+            	}
+            	
+            	return false;
+            }
+            	
             function drawGrid(context) {
             	context.moveTo(0, 0);
             	
             	//draw rectangles
-            	for (var x = 0; x < WIDTH; x += OFFSET) {
-            		for (var y = 0; y < HEIGHT; y+= OFFSET) {
-            	    context.rect(x, y, OFFSET, OFFSET);
-            	    context.fillStyle = "black";
+            	for (var x = 1; x <= 10; x ++) {
+            		for (var y = 1; y <= 10; y++) {
+            			context.beginPath();
+            	    context.rect((x-1) * OFFSET, (y-1) * OFFSET, OFFSET, OFFSET);
+            	    
+            	    //colour player selected location differently
+            	    if (x == selectedLocation.x && y == selectedLocation.y) {
+            	    	context.fillStyle = "grey";
+            	    } else {
+            	    	context.fillStyle = "black";
+            	    }
             	    context.fill();
             	    context.lineWidth = 1;
             	    context.strokeStyle = "grey";
