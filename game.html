@@ -15,9 +15,7 @@
         		planets[3] = new Planet(8, 6, 0);
         	  
         		//create 2 players and a neutral player (for ownership of neutral
-        		//planets
-        		
-        		
+        		//planets       		
         		var players = new Array();
         		players[0] = new Player(0, "neutral", 0, "grey");
         		players[1] = new Player(1, "player 1", 10, "red");
@@ -66,6 +64,19 @@
             	    context.stroke();
             	  }
             	}
+            	
+            	//draw y axis labels
+            	context.fillStyle = "grey";
+            	context.font = "20px Arial";
+            	for (var y = 1; y <= 10; y++) {
+            		context.fillText(y, 510, (y * OFFSET) - (OFFSET / 4));
+            	}
+            	
+            	//draw x axis labels
+            	for (var x = 1; x <= 10; x++) {
+            		context.fillText(x, (x * OFFSET) - (OFFSET / 4 * 3), 530);
+            	}
+            	
             }
             
             function drawPlanets(context) {
@@ -152,7 +163,7 @@
         </script>
     </head>
     <body style="background-color:black;">
-        <canvas id="myCanvas" width="800" height="500">
+        <canvas id="myCanvas" width="800" height="600">
         </canvas>
     </body>
 </html>
