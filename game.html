@@ -30,7 +30,7 @@
         		ShipClasses.dreadnaught = new ShipType(10, 1, 6, "D");
         		ShipClasses.corvette = new ShipType(10, 3, 3, "C");
         		ShipClasses.hive = new ShipType(10, 1, 3, "H");
-        		ShipClasses.fighter = new ShipType(5, 2, 1, "f");
+        		ShipClasses.fighter = new ShipType(5, 1, 1, "f");
         		ShipClasses.bomber = new ShipType(8, 1, 3, "b");
         		
         		//create a couple of ships
@@ -77,8 +77,38 @@
             		selectedLocation = {x: -1, y:-1};
             		isShipSelected = false;
             		redraw();
-            	}
+            		} else if (isShipSelected && isWithinRange(coord.x, coord.y)) {
+            			var selShip = getSelectedShip();
+            			selShip.x = coord.x;
+            			selShip.y = coord.y;
+            			isShipSelected = false;
+            			endTurn();
+            			redraw();
+            		}
             }
+            
+            function endTurn() {
+            	if (playerTurn == 1) {
+            		playerTurn = 2;
+            	} else {
+            		playerTurn = 1;
+            	}
+            	
+            	incrementResources();
+            }
+            
+            function incrementResources() {
+            	var count = 0;
+            	
+            	for (var i = 0; i < planets.length; i++) {
+            		if (planets[i].player == playerTurn) {
+            			count++;
+            		}
+            	}
+            	
+            	players[playerTurn].resources += count;
+            }
+            		
             
             function isPlayerShip(coord) {
             	for (var i = 0; i < ships.length; i++) {
@@ -100,15 +130,18 @@
             			context.beginPath();
             	    context.rect((x-1) * OFFSET, (y-1) * OFFSET, OFFSET, OFFSET);
             	    
-            	    //colour player selected location differently
-            	    if (x == selectedLocation.x && y == selectedLocation.y) {
-            	    	context.fillStyle = "grey";
-            	    } else {
-            	    	context.fillStyle = "black";
-            	    }
+            	    context.fillStyle = "black";
             	    context.fill();
-            	    context.lineWidth = 1;
-            	    context.strokeStyle = "grey";
+            	    if (isWithinRange(x, y)) {
+            	    	context.lineWidth = 3;
+            	    } else {
+            	    	context.lineWidth = 1;
+            	    }
+            	    if (isWithinRange(x, y)) {
+            	    	context.strokeStyle = "white";
+            	    } else {
+            	    	context.strokeStyle = "grey";
+            	    }
             	    context.stroke();
             	  }
             	}
@@ -125,6 +158,27 @@
             		context.fillText(x, (x * OFFSET) - (OFFSET / 4 * 3), 530);
             	}
             	
+            }
+            
+            function isWithinRange(x, y) {
+            	var selShip = getSelectedShip();
+            	if (selShip == null) {
+            		return false;
+            	}
+            	var range = ShipClasses[selShip.type].movement;
+            	return Math.abs(x - selectedLocation.x) <= range
+            		 && Math.abs(y - selectedLocation.y) <= range
+            }
+            
+            function getSelectedShip() {
+            	for (var i = 0; i < ships.length; i++) {
+            		if (ships[i].x == selectedLocation.x &&
+            			ships[i].y == selectedLocation.y) {
+            				return ships[i];
+            		}	
+            	}
+            	
+            	return null;
             }
             
             function drawPlanets(context) {
