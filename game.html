@@ -66,7 +66,15 @@
             		if (sh == null) {
             			return;
             		} else {
-            			alert (sh.symbol);
+            			if (ShipClasses[sh].cost <= players[playerTurn].resources) {
+            				ships.push(new Ship(sh, playerTurn, selectedLocation.x,
+            					selectedLocation.y));
+            				players[playerTurn].resources -= ShipClasses[sh].cost;
+            				isPlanetSelected = false;
+            				selectedLocation = {x: -1, y: -1};
+            				endTurn();
+            				redraw();
+            			}
             		}
             	}
             }
@@ -75,7 +83,7 @@
             	for (var i in ShipClasses) {
             		var obj = ShipClasses[i];
             		if (obj.keyCode == keyCode) {
-            			return obj;
+            			return i;
             		}
             	}
             	
@@ -459,6 +467,7 @@
         </script>
     </head>
     <body style="background-color:black;">
+    <h1 style="color:red; font:40px arial;">Space Chess</h1>
         <canvas id="myCanvas" width="800" height="600">
         </canvas>
     </body>
