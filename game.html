@@ -99,11 +99,22 @@
             			
             			selShip.x = coord.x;
             			selShip.y = coord.y;
+            			checkForCapturedPlanets(selShip);
             			isShipSelected = false;
             			endTurn();
             			redraw();
             		}
             }
+            
+            function checkForCapturedPlanets(selShip) {
+            	for (var i = 0; i < planets.length; i++) {
+            		if (planets[i].x == selShip.x && planets[i].y == selShip.y) {
+            			planets[i].player = playerTurn;
+            			return;
+            		}
+            	}
+            }
+            	
             
             function isEnemyShip(coord) {
             	return getEnemyShipIndex(coord) != null;
