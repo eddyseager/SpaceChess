@@ -29,11 +29,11 @@
         		
         		//create the ship types
         		var ShipClasses = new Object();
-        		ShipClasses.Dreadnaught = new ShipType(10, 1, 6, "D");
-        		ShipClasses.Corvette = new ShipType(10, 3, 3, "C");
-        		ShipClasses.Hive = new ShipType(10, 1, 3, "H");
-        		ShipClasses.Fighter = new ShipType(5, 1, 1, "f");
-        		ShipClasses.Bomber = new ShipType(8, 1, 3, "b");
+        		ShipClasses.Dreadnaught = new ShipType(10, 1, 6, "D", 68);
+        		ShipClasses.Corvette = new ShipType(10, 3, 3, "C", 67);
+        		ShipClasses.Hive = new ShipType(10, 1, 3, "H", 72);
+        		ShipClasses.Fighter = new ShipType(5, 1, 1, "f", 70);
+        		ShipClasses.Bomber = new ShipType(8, 1, 3, "b", 66);
         		
         		//create a couple of ships
         		var ships = new Array();
@@ -53,7 +53,43 @@
                 			processClick(mousePos);
                 		}
                 }, false);
+                
+                window.addEventListener('keydown', function(evt){
+                		//alert(evt.keyCode);
+                		processKey(evt.keyCode);
+                }, true);
             };
+            
+            function processKey(keyCode) {
+            	if (isBuildingAllowed()) {
+            		var sh = getShipForKeyCode(keyCode);
+            		if (sh == null) {
+            			return;
+            		} else {
+            			alert (sh.symbol);
+            		}
+            	}
+            }
+            
+            function getShipForKeyCode(keyCode) {
+            	for (var i in ShipClasses) {
+            		var obj = ShipClasses[i];
+            		if (obj.keyCode == keyCode) {
+            			return obj;
+            		}
+            	}
+            	
+            	return null;
+            }
+            
+            function isBuildingAllowed() {
+            	if (isPlanetSelected) {
+            		return true;
+            	} else {
+            		var selShip = getSelectedShip();
+            		return selShip.type == "Hive";
+            	}
+            }
             
             function redraw() {
             	var canvas = document.getElementById("myCanvas");
@@ -327,16 +363,37 @@
             	
             	//draw info about selected ship
             	if (isShipSelected) {
-            		context.font = "14px Arial";
+            		context.font = "bold 14px Arial";
             		context.fillStyle = players[playerTurn].colour;
             		var selShip = getSelectedShip();
             		var shipClass = ShipClasses[selShip.type];
             		context.fillText(selShip.type, 600, 120);
             	  context.font = "12px Arial";
-            	  context.fillText("moves " + shipClass.movement, 600, 140);
-            	  context.fillText("strength " + shipClass.strength, 600, 155);
+            	  context.fillText("moves " + shipClass.movement, 600, 135);
+            	  context.fillText("strength " + shipClass.strength, 600, 150);
+            	  
+            	  if (selShip.type == "Hive") {
+            	  	drawBuildMenu(context);
+            	  }
             	}
             	
+            	//draw build menu
+            	if (isPlanetSelected ) {
+            		drawBuildMenu(context);
+            	}
+            	
+            }
+            
+            function drawBuildMenu(context) {
+            	context.font = "bold 14px Arial";
+            	context.fillStyle = players[playerTurn].colour;
+            	context.fillText("Build Options", 600, 180);
+            	context.font = "12px Arial";
+            	context.fillText("D = dreadnaught (10)", 600, 195);
+            	context.fillText("H = hive (10)", 600, 210);
+            	context.fillText("C = corvette (10)", 600, 225);
+            	context.fillText("B = bomber (8)", 600, 240);
+            	context.fillText("F = fighter (5)", 600, 255);	
             }
             
             function drawShips(context) {
@@ -397,11 +454,12 @@
             	this.colour = colour;
             }
             
-            function ShipType(cost, movement, strength, symbol) {
+            function ShipType(cost, movement, strength, symbol, keyCode) {
             	this.cost = cost;
             	this.movement = movement;
             	this.strength = strength;
             	this.symbol = symbol;
+            	this.keyCode = keyCode;
             }
             
             function Ship(type, player, x, y) {
