@@ -152,9 +152,9 @@
             	incrementResources();
             }
             
-            //lose if you have no ships or no planets
+            //lose if you have no planets
             function hasLost(player) {
-            	return countShips(player) == 0 || countPlanets(player) == 0;
+            	return countPlanets(player) == 0;
             }
             
             function countShips(player) {
