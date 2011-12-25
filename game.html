@@ -27,18 +27,18 @@
         		
         		//create the ship types
         		var ShipClasses = new Object();
-        		ShipClasses.dreadnaught = new ShipType(10, 1, 6, "D");
-        		ShipClasses.corvette = new ShipType(10, 3, 3, "C");
-        		ShipClasses.hive = new ShipType(10, 1, 3, "H");
-        		ShipClasses.fighter = new ShipType(5, 1, 1, "f");
-        		ShipClasses.bomber = new ShipType(8, 1, 3, "b");
+        		ShipClasses.Dreadnaught = new ShipType(10, 1, 6, "D");
+        		ShipClasses.Corvette = new ShipType(10, 3, 3, "C");
+        		ShipClasses.Hive = new ShipType(10, 1, 3, "H");
+        		ShipClasses.Fighter = new ShipType(5, 1, 1, "f");
+        		ShipClasses.Bomber = new ShipType(8, 1, 3, "b");
         		
         		//create a couple of ships
         		var ships = new Array();
-        		ships[0] = new Ship("dreadnaught", 1, 4, 3);
-        		ships[1] = new Ship("corvette", 2, 8, 8);
-        		ships[2] = new Ship("hive", 2, 1, 1);
-        		ships[3] = new Ship("fighter", 1, 10, 10);
+        		ships[0] = new Ship("Dreadnaught", 1, 4, 3);
+        		ships[1] = new Ship("Corvette", 2, 8, 8);
+        		ships[2] = new Ship("Hive", 2, 1, 1);
+        		ships[3] = new Ship("Fighter", 1, 10, 10);
 	
         
             window.onload = function(){
@@ -207,6 +207,18 @@
             	context.fillText(players[1].resources, 600, 80);
             	context.fillStyle = players[2].colour;
             	context.fillText(players[2].resources, 670, 80);
+            	
+            	//draw info about selected ship
+            	if (isShipSelected) {
+            		context.font = "14px Arial";
+            		context.fillStyle = players[playerTurn].colour;
+            		var selShip = getSelectedShip();
+            		var shipClass = ShipClasses[selShip.type];
+            		context.fillText(selShip.type, 600, 120);
+            	  context.font = "12px Arial";
+            	  context.fillText("moves " + shipClass.movement, 600, 140);
+            	  context.fillText("strength " + shipClass.strength, 600, 155);
+            	}
             	
             }
             
