@@ -73,11 +73,12 @@
             	} else if (isShipSelected && isPlayerShip(coord) && 
             		selectedLocation.x == coord.x && 
             		selectedLocation.y == coord.y) {
-            		//unselec selected ship
+            		//unselect selected ship
             		selectedLocation = {x: -1, y:-1};
             		isShipSelected = false;
             		redraw();
-            		} else if (isShipSelected && isWithinRange(coord.x, coord.y)) {
+            		} else if (isShipSelected && isWithinRange(coord.x, coord.y)
+            			&& !isPlayerShip(coord)) {
             			var selShip = getSelectedShip();
             			selShip.x = coord.x;
             			selShip.y = coord.y;
