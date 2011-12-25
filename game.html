@@ -79,13 +79,45 @@
             		redraw();
             		} else if (isShipSelected && isWithinRange(coord.x, coord.y)
             			&& !isPlayerShip(coord)) {
+            			//move ship
             			var selShip = getSelectedShip();
+            			
+            			//check if there is an enemy ship here
+            			if (isEnemyShip(coord)) {
+            				var enemyIndex = getEnemyShipIndex(coord);
+            				var enemyStr = ShipClasses[ships[enemyIndex].type].strength;
+            				var selStr = ShipClasses[selShip.type].strength;
+            				
+            				//cannot do a suicide move
+            				if (enemyStr > selStr) {
+            					return;
+            				} else {
+            					//destroy enemy ship by removing it from the array
+            					ships.splice(enemyIndex, 1);
+            				}
+            			}
+            			
             			selShip.x = coord.x;
             			selShip.y = coord.y;
             			isShipSelected = false;
             			endTurn();
             			redraw();
             		}
+            }
+            
+            function isEnemyShip(coord) {
+            	return getEnemyShipIndex(coord) != null;
+            }
+            
+            function getEnemyShipIndex(coord) {
+            	for (var i = 0; i < ships.length; i++) {
+            		if(ships[i].x == coord.x && ships[i].y == coord.y &&
+            			ships[i].player != playerTurn) {
+            				return i;
+            		}
+            	}
+            	
+            	return null;
             }
             
             function endTurn() {
