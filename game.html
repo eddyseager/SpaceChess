@@ -24,6 +24,7 @@
         		var turnNumber = 1;
         		var isShipSelected = false;
         		var selectedLocation = {x: -1, y: -1};
+        		var isGameOver = false;
         		
         		//create the ship types
         		var ShipClasses = new Object();
@@ -47,7 +48,7 @@
                 
                 canvas.addEventListener('click', function(evt){
                 		var mousePos = getMousePos(canvas, evt);
-                		if (mousePos.x <= 10 && mousePos.y <= 10) {
+                		if (mousePos.x <= 10 && mousePos.y <= 10 && !isGameOver) {
                 			processClick(mousePos);
                 		}
                 }, false);
@@ -133,12 +134,49 @@
             
             function endTurn() {
             	if (playerTurn == 1) {
-            		playerTurn = 2;
+            		if (hasLost(2)) {
+            			//player 1 wins
+            			isGameOver = true;
+            		} else {
+            			playerTurn = 2;
+            		}
             	} else {
-            		playerTurn = 1;
+            		if (hasLost(1)) {
+            			//player 2 wins
+            			isGameOver = true;
+            		} else {
+            			playerTurn = 1;
+            		}
             	}
             	
             	incrementResources();
+            }
+            
+            //lose if you have no ships or no planets
+            function hasLost(player) {
+            	return countShips(player) == 0 || countPlanets(player) == 0;
+            }
+            
+            function countShips(player) {
+            	var count = 0;
+            	for (var i = 0; i < ships.length; i++) {
+            		if (ships[i].player == player) {
+            			count++;
+            		}
+            	}
+            	
+            	return count;
+            }
+            
+            function countPlanets(player) {
+            	var count = 0;
+            	for (var i = 0; i < planets.length; i++) {
+            		if (planets[i].player == player) {
+            			count++;
+            		}
+            	}
+            	
+            	return count;
             }
             
             function incrementResources() {
@@ -243,7 +281,11 @@
             	//draw who's turn it is
             	context.font = "20px Arial";
             	context.fillStyle = players[playerTurn].colour;
-            	context.fillText("Player " + playerTurn + "'s Turn", 600, 20);
+            	if (isGameOver) {
+            		context.fillText("Player " + playerTurn + " Wins!", 600, 20);
+            	} else {
+            		context.fillText("Player " + playerTurn + "'s Turn", 600, 20);
+            	}
             	
             	//draw the resources
             	context.font = "40px Arial";
