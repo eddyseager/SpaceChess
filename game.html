@@ -23,6 +23,7 @@
         		var playerTurn = 1;
         		var turnNumber = 1;
         		var isShipSelected = false;
+        		var isPlanetSelected = false;
         		var selectedLocation = {x: -1, y: -1};
         		var isGameOver = false;
         		
@@ -67,7 +68,7 @@
             
             function processClick(coord) {
             	//select a ship to move
-            	if (!isShipSelected && isPlayerShip(coord)) {
+            	if (!isShipSelected && !isPlanetSelected && isPlayerShip(coord)) {
             			selectedLocation = coord;
             			isShipSelected = true;
             			redraw();
@@ -104,7 +105,32 @@
             			isShipSelected = false;
             			endTurn();
             			redraw();
+            			} else if (!isShipSelected && !isPlanetSelected &&
+            				isPlayerPlanet(coord)) {
+            				//bring up build menu for planet
+            				selectedLocation = coord;
+            				isPlanetSelected = true;
+            				
+            				redraw();
+            			} else if (isPlanetSelected && isPlayerPlanet(coord) && 
+            					selectedLocation.x == coord.x && 
+            					selectedLocation.y == coord.y) {
+            				//unselect a planet
+            				selectedLocation = {x: -1, y:-1};
+            				isPlanetSelected = false;
+            				redraw();
+            			}
+            }
+            
+            function isPlayerPlanet(coord) {
+            	for (var i = 0; i < planets.length; i++) {
+            		if (planets[i].x == coord.x && planets[i].y == coord.y &&
+            			planets[i].player == playerTurn) {
+            			return true;
             		}
+            	}
+            	
+            	return false;
             }
             
             function checkForCapturedPlanets(selShip) {
@@ -214,12 +240,12 @@
             	    
             	    context.fillStyle = "black";
             	    context.fill();
-            	    if (isWithinRange(x, y)) {
+            	    if (isWithinRange(x, y) || isSelectedPlanet(x, y)) {
             	    	context.lineWidth = 3;
             	    } else {
             	    	context.lineWidth = 1;
             	    }
-            	    if (isWithinRange(x, y)) {
+            	    if (isWithinRange(x, y) || isSelectedPlanet(x, y)) {
             	    	context.strokeStyle = "white";
             	    } else {
             	    	context.strokeStyle = "grey";
@@ -240,6 +266,11 @@
             		context.fillText(x, (x * OFFSET) - (OFFSET / 4 * 3), 530);
             	}
             	
+            }
+            
+            function isSelectedPlanet(x, y) {
+            	return isPlanetSelected && selectedLocation.x == x &&
+            		selectedLocation.y == y;
             }
             
             function isWithinRange(x, y) {
