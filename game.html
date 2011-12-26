@@ -9,10 +9,14 @@
         		
         		//create our planets
         		var planets = new Array();
-        		planets[0] = new Planet(3, 3, 1);
-        		planets[1] = new Planet(8, 8, 2);
-        	  planets[2] = new Planet(3, 5, 0);
-        		planets[3] = new Planet(8, 6, 0);
+        		planets[0] = new Planet(2, 2, 1);
+        		planets[1] = new Planet(9, 9, 2);
+        	  planets[2] = new Planet(2, 4, 0);
+        		planets[3] = new Planet(9, 7, 0);
+        		planets[4] = new Planet(5, 6, 0);
+        		planets[5] = new Planet(6, 5, 0);
+        	  planets[6] = new Planet(1, 9, 0);
+        	  planets[7] = new Planet(10, 2, 0);
         	  
         		//create 2 players and a neutral player (for ownership of neutral
         		//planets       		
@@ -29,18 +33,18 @@
         		
         		//create the ship types
         		var ShipClasses = new Object();
-        		ShipClasses.Dreadnaught = new ShipType(10, 1, 6, "D", 68);
-        		ShipClasses.Corvette = new ShipType(10, 3, 3, "C", 67);
-        		ShipClasses.Gunboat = new ShipType(8, 1, 3, "G", 71);
-        		ShipClasses.Fighter = new ShipType(5, 1, 1, "f", 70);
-        		ShipClasses.Bomber = new ShipType(8, 1, 3, "b", 66);
+        		ShipClasses.Dreadnaught = new ShipType(20, 1, 6, "D", 68);
+        		ShipClasses.Corvette = new ShipType(20, 3, 4, "C", 67);
+        		ShipClasses.Gunboat = new ShipType(5, 1, 3, "G", 71);
+        		ShipClasses.Fighter = new ShipType(5, 3, 1, "F", 70);
+        		ShipClasses.Bomber = new ShipType(10, 3, 3, "B", 66);
         		
         		//create a couple of ships
         		var ships = new Array();
-        		ships[0] = new Ship("Dreadnaught", 1, 4, 3);
-        		ships[1] = new Ship("Corvette", 2, 8, 8);
-        		ships[2] = new Ship("Gunboat", 2, 1, 1);
-        		ships[3] = new Ship("Fighter", 1, 10, 10);
+        		//ships[0] = new Ship("Dreadnaught", 1, 4, 3);
+        		//ships[1] = new Ship("Corvette", 2, 8, 8);
+        		//ships[2] = new Ship("Gunboat", 2, 1, 1);
+        		//ships[3] = new Ship("Fighter", 1, 10, 10);
 	
         
             window.onload = function(){
@@ -93,7 +97,7 @@
             function redraw() {
             	var canvas = document.getElementById("myCanvas");
                var context = canvas.getContext("2d");
-              context.clearRect(0, 0, 800, 600);
+              context.clearRect(0, 0, 900, 600);
  
                drawGrid(context);
                drawPlanets(context);
@@ -384,11 +388,21 @@
             	context.fillStyle = players[playerTurn].colour;
             	context.fillText("Build Options", 600, 180);
             	context.font = "12px Arial";
-            	context.fillText("d = Dreadnaught (10)", 600, 195);
-            	context.fillText("g = Gunboat (8)", 600, 210);
-            	context.fillText("c = Corvette (10)", 600, 225);
-            	context.fillText("b = Bomber (8)", 600, 240);
-            	context.fillText("f = Fighter (5)", 600, 255);	
+            	context.fillText("d = Dreadnaught (Cost " + ShipClasses.Dreadnaught.cost
+            		+ " Move " + ShipClasses.Dreadnaught.movement + " Str " +
+            		ShipClasses.Dreadnaught.strength + ")", 600, 195);
+            	context.fillText("c = Corvette (Cost " + ShipClasses.Corvette.cost
+            		+ " Move " + ShipClasses.Corvette.movement + " Str " +
+            		ShipClasses.Corvette.strength + ")", 600, 210);
+            	context.fillText("b = Bomber (Cost " + ShipClasses.Bomber.cost
+            		+ " Move " + ShipClasses.Bomber.movement + " Str " +
+            		ShipClasses.Bomber.strength + ")", 600, 225);
+            	context.fillText("g = Gunboat (Cost " + ShipClasses.Gunboat.cost
+            		+ " Move " + ShipClasses.Gunboat.movement + " Str " +
+            		ShipClasses.Gunboat.strength + ")", 600, 240);
+            	context.fillText("f = Fighter (Cost " + ShipClasses.Fighter.cost
+            		+ " Move " + ShipClasses.Fighter.movement + " Str " +
+            		ShipClasses.Fighter.strength + ")", 600, 255);	
             }
             
             function drawShips(context) {
@@ -470,7 +484,7 @@
     
     <h1 style="color:red; font:40px arial;">Space Chess</h1>
     
-        <canvas id="myCanvas" width="800" height="540">
+        <canvas id="myCanvas" width="900" height="540">
         </canvas>
         
     <h2 style="color:white; font:20px arial;">Instructions</h2>   
