@@ -23,7 +23,7 @@
         		var players = new Array();
         		players[0] = new Player(0, "neutral", 0, "grey");
         		players[1] = new Player(1, "player 1", 10, "red");
-        		players[2] = new Player(2, "player 2", 10, "yellow");
+        		players[2] = new Player(2, "player 2", 0, "yellow");
         		var playerTurn = 1;
         		var turnNumber = 1;
         		var isShipSelected = false;
@@ -33,15 +33,15 @@
         		
         		//create the ship types
         		var ShipClasses = new Object();
-        		ShipClasses.Dreadnaught = new ShipType(20, 1, 6, "D", 68);
-        		ShipClasses.Corvette = new ShipType(20, 3, 4, "C", 67);
-        		ShipClasses.Gunboat = new ShipType(5, 1, 3, "G", 71);
+        		ShipClasses.Dreadnaught = new ShipType(50, 1, 6, "D", 68);
+        		ShipClasses.Corvette = new ShipType(25, 2, 4, "C", 67);
+        		ShipClasses.Gunboat = new ShipType(10, 1, 3, "G", 71);
         		ShipClasses.Fighter = new ShipType(5, 3, 1, "F", 70);
-        		ShipClasses.Bomber = new ShipType(10, 3, 3, "B", 66);
+        		ShipClasses.Bomber = new ShipType(10, 2, 2, "B", 66);
         		
         		//create a couple of ships
         		var ships = new Array();
-        		//ships[0] = new Ship("Dreadnaught", 1, 4, 3);
+        		ships[0] = new Ship("Bomber", 2, 9, 10);
         		//ships[1] = new Ship("Corvette", 2, 8, 8);
         		//ships[2] = new Ship("Gunboat", 2, 1, 1);
         		//ships[3] = new Ship("Fighter", 1, 10, 10);
